@@ -1,0 +1,11 @@
+1 - Quantidade de linhas por valor de qualidade
+2 - Média de qualidade
+3 - Quantidade de linhas acima da média e abaixo da qualidade
+4 - Realizar medidas de dispersão em cada uma das colunas e verificar as que menos variam (PCA)
+
+À parte
+4 - Realizar regressão linear com cada uma das variáveis
+5 - Covariância
+
+*Algumas ideias poerã serem ,,,32,
+passadas para o R

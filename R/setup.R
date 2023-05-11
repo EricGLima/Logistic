@@ -15,7 +15,7 @@ library(tidyverse)
 library(tree)
 
 # Working Directory
-setwd("C:/Users/Eric/Desktop/Logística/Trabalhos/Databases")
+setwd("C:/Users/Eric/Desktop/Logística/FirstWork/Databases")
 
 # Seed
 seed = 10
