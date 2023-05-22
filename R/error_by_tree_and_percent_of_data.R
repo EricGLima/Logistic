@@ -1,23 +1,12 @@
-test = function(x,y) {
-  
-  sub = sample(1:l,x*l)
-  
-  adaboost = boosting(
-    quality ~ .,
-    data      = data[sub, ],
-    mfinal    = y,
-    coeflearn = 'Breiman',
-    control   = rpart.control(maxdepth=20)
-  )
-  
-  p = predict.boosting(
-    adaboost,
-    newdata = data[-sub, ]
-  )
-  
-  message(paste(x, y, p$error, sep="-"))
-  return(p$error)
-}
+# May 03, 2023
+# CEFET - RJ
+# Logistic
+# Eric G. Lima
+
+## Using variations of data and trees
+
+#####
+# Setup
 
 train_step = 0.05
 train_seq = seq(train_step, 1 - train_step, train_step)
@@ -26,20 +15,9 @@ tree_step = 50
 tree_seq = seq(tree_step, 300, tree_step)
 
 #####
-error_list = map_dbl(train_seq, test)
+# Creating the models
 
-plot(
-  train_seq,
-  error_list,
-  type = 'b',
-  pch  = 16,
-  xaxp = c(0,1,20),
-  ylab = "error",
-  xlab = "percent of data used to train"
-)
-#####
-
-stats = map(tree_seq, function(x) map(train_seq, function(y) test(y,x))) %>%
+stats = map(tree_seq, function(x) map(train_seq, ~get_pred_by_data_and_tree(.,x))) %>%
   list2df() %>%
   group_by(X2) %>%
   mutate(Grp = row_number()) %>%
@@ -51,6 +29,8 @@ colnames(stats) = c('perc_data_used', tree_seq)
 stats
 
 #####
+# Plotting each model's error
+
 stats_plot = stats %>%
   gather(
     "iterations",
@@ -76,12 +56,3 @@ ggplot(stats_plot, aes(x= perc_data_used,y=error, color=as.factor(iterations))) 
     color="red",
     linetype="dashed"
   )
-
-#####
-#write.csv(stats,"adaboost_hyper_erros.csv", row.names = FALSE)
-
-
-
-
-
-

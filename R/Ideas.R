@@ -20,5 +20,5 @@
 
 ## Ideias da aula
 
-# Verificar o nível de impotância das variáveis (valor que sai do adaboost ou randm forest)
-# Utiliza diferentes valores de seed para verificar a veracidade dos dados encntrados
+# Verificar o nível de impotância das variáveis (valor que sai do adaboost ou random forest)
+# Utilizar diferentes valores de seed para verificar a veracidade dos dados encntrados

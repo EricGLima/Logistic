@@ -7,6 +7,7 @@
 
 # Libraries
 library(adabag)
+library(boot)
 library(caret)
 library(modelr)
 library(qdap)
@@ -22,3 +23,16 @@ seed = 10
 
 # Database
 data = read.csv('winequality-red.csv', header=T, sep=';')
+
+# Defining quality
+#data$quality = as.factor(data$quality)
+#data$quality = as.factor(ifelse(data$quality==8, 'Aprovado', 'Reprovado')) 
+data$quality = as.factor(ifelse(data$quality>=6, 'Aprovado', 'Reprovado')) 
+
+#data$quality = as.factor(
+#  ifelse(
+#    data$quality >= 7, 'Aprovado', ifelse(
+#      data$quality >= 5, 'Media', 'Reprovado'
+#    )
+#  )
+#)

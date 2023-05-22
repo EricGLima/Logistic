@@ -7,7 +7,6 @@
 
 #####
 # Setup
-data$quality = as.factor(ifelse(data$quality>=6, 'Aprovado', 'Reprovado')) 
 
 tree_step = 25
 tree_seq = seq(100, 300, tree_step)

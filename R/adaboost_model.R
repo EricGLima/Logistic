@@ -6,24 +6,7 @@
 ## Using Adaboost in the Base wine quality
 
 #####
-# Definindo como a qualidade sera metrificada
-
-#data$quality = as.factor(data$quality)
-#data$quality = as.factor(ifelse(data$quality==8, 'Aprovado', 'Reprovado')) 
-data$quality = as.factor(ifelse(data$quality>=6, 'Aprovado', 'Reprovado')) 
-
-data$quality = as.factor(
-  ifelse(
-      data$quality >= 7, 'Aprovado', ifelse(
-      data$quality >= 5, 'Media', 'Reprovado'
-    )
-  )
-)
-
-glimpse(data)
-
-#####
-# Aplicacao do adaboost
+# First Adaboost's aplication
 
 adaboost = boosting(
   quality ~ ., 
@@ -36,15 +19,13 @@ adaboost = boosting(
 
 summary(adaboost)
 
-# Prevendo os valores e matriz de confusao
 p = predict(adaboost, data)
 p
 
 #####
-# Segunda aplicacao do adaboost
+# Second Adaboost's aplication
 
 l = length(data[,1])
-#sub = sample(1:l,2*l/3)
 set.seed(seed)
 sub = sample(1:l,0.9*l)
 
@@ -57,34 +38,26 @@ adaboost = boosting(
   control   = rpart.control(maxdepth=20)
 )
 
+# Predicions
 set.seed(seed)
 p = predict.boosting(
   adaboost,
   newdata = data[-sub, ]
 )
 
-p = predict.boosting(
-  models_by_tree[[4]][[6]],
-  newdata = data[cv$test[[6]][["idx"]], ]
-)
-
 p$confusion
 p$error
 
+# comparing error evolution in training and test set
 
-evol.train = errorevol(models_by_tree[[4]][[6]], newdata = data[cv$train[[6]][["idx"]], ])
-evol.test = errorevol(models_by_tree[[4]][[6]], newdata = data[cv$test[[6]][["idx"]], ])
-
-plot.errorevol(evol.test,evol.train)
-
-#####
-#comparing error evolution in training and test set
 evol.train = errorevol(adaboost, newdata = data[sub, ])
 evol.test = errorevol(adaboost, newdata = data[-sub, ])
 
 plot.errorevol(evol.test,evol.train)
 
 #####
+# Plotting the error with ggplot
+
 error_evol = data.frame(
   iter = 1:length(evol.train$error),
   train = evol.train$error,
@@ -106,13 +79,15 @@ ggplot(error_evol,aes(x=iter, y=error, color=type)) +
   theme_linedraw()
 
 #####
-# Verificando uma das arvores criadas
+# Verifying the first tree
+
 t1 = adaboost$trees[[1]]
 plot(t1)
 text(t1, pretty=0)
 
 #####
-# Verificando o metodo utilizado
+# Verifying the model
+
 adaboost$weights
 adaboost$importance
 errorevol(adaboost,data)

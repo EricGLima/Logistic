@@ -6,7 +6,7 @@
 ## All functions of each archive
 
 #####
-# Cross_validation.R
+# cross_validation.R
 ada = function(x,y) {
   
   set.seed(seed)
@@ -33,3 +33,26 @@ get_pred = function(model, test_index){
   
   return(p$error)
 }
+
+# error_by_tree_and_percent_of_data.R
+get_pred_by_data_and_tree = function(x,y) {
+  
+  sub = sample(1:l,x*l)
+  
+  adaboost = boosting(
+    quality ~ .,
+    data      = data[sub, ],
+    mfinal    = y,
+    coeflearn = 'Breiman',
+    control   = rpart.control(maxdepth=20)
+  )
+  
+  p = predict.boosting(
+    adaboost,
+    newdata = data[-sub, ]
+  )
+  
+  message(paste(x, y, p$error, sep="-"))
+  return(p$error)
+}
+
