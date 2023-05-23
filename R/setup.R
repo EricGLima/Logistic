@@ -35,4 +35,5 @@ data$quality = as.factor(ifelse(data$quality>=6, 'Aprovado', 'Reprovado'))
 #      data$quality >= 5, 'Media', 'Reprovado'
 #    )
 #  )
+
 #)
